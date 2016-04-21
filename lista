@@ -1,0 +1,81 @@
+#include "librerias.h"
+
+typedef struct tCell{
+	int payload;
+	void *next;
+} Cell;
+
+Cell* cola(Cell *root, int entrada){
+	Cell *nuevo_nodo;
+	nuevo_nodo = (Cell*)malloc(sizeof(Cell));
+	nuevo_nodo->payload = entrada; //(*nuevo_nodo).payload = numero
+	nuevo_nodo->next = NULL;
+	Cell *cursor = root;
+	while(cursor->next != NULL){
+		cursor = (Cell*)cursor->next;
+	}
+	cursor->next = (void*)nuevo_nodo;
+	return root;
+}
+void imprimeLista(Cell *root){
+	//printf("%d", ((Cell*)root->next)->payload);
+	printf("*");
+	while((root = ((Cell*)root->next)) != NULL)
+		printf("--> %d", root->payload);
+		/*
+		printf("--> %d ", ((Cell*)root.next)->payload);
+		root = *((Cell*)root.next);
+	}*/
+	printf("\n");
+}
+Cell *pop(Cell *root){
+	Cell *cursor = root;
+	if(root->next == NULL) return root;
+	while(((Cell*)cursor->next)->next != NULL){
+			//printf("%d\n", cursor->payload);
+			cursor = (Cell*)cursor->next;
+	}
+	//printf("%d\n", cursor->payload);	
+	free(cursor->next); //aquí borramos el contenido del ultimo nodo
+	cursor->next = NULL; //aquí borramos la referencia a ese cuadrito (que ya no tiene nada)
+	return root;
+}
+Cell *erase(Cell *root){
+	while(root->next != NULL)
+		pop(root);
+	return root;
+}
+int dar_opcion(){
+		int opcion;
+		printf("Opciones:\n0, agrega nodo.\n1,borra ultimo numero.\n2, imprime lista.\n3, salir.\n\nDame opción: ");	
+		scanf("%d", &opcion);
+	return opcion;
+}
+int main(int argc, char* argv[]){
+	Cell root;
+	int nuevo_numero;
+	root.payload = -1;
+	root.next = NULL;
+	int opcion = dar_opcion();
+	while(opcion != 3){
+		if(opcion == 0){
+			printf("Dame un numero: ");
+			scanf("%d", &nuevo_numero);
+			//printf("%d", nuevo_numero);
+			cola(&root, nuevo_numero);
+			printf("\n");
+			//printf("%d \n", ((Cell*)root.next)->payload);
+		}else if(opcion == 1){
+			
+			pop(&root);
+		}else if(opcion == 2){
+			//printf("%d \n", ((Cell*)root.next)->payload);
+			imprimeLista(&root);
+		}
+		printf("\n");
+		opcion = dar_opcion();
+		//printf("%d", opcion);
+	}
+	erase(&root);
+	return 0;
+}
